@@ -35,7 +35,7 @@ PREDICTOR_SERIES = {
     "UNRATE":   {"desc": "Unemployment Rate",                   "tcode": 1, "freq": "M"},
     "ICSA":     {"desc": "Initial Jobless Claims (weekly)",     "tcode": 5, "freq": "W"},
     "HOUST":    {"desc": "Housing Starts",                      "tcode": 5, "freq": "M"},
-    "DGORDER":  {"desc": "Durable Goods Orders",                "tcode": 5, "freq": "M"},
+    "DGORDER":  {"desc": "Durable Goods Orders",                "tcode": 5, "freq": "M"},  # FRED data starts 1992-02 despite series listed from 1990
     "UMCSENT":  {"desc": "U of Michigan Consumer Sentiment",    "tcode": 1, "freq": "M"},
     "PCEPI":    {"desc": "PCE Price Index",                     "tcode": 5, "freq": "M"},
     "T10Y2Y":   {"desc": "10Y-2Y Treasury Yield Spread",        "tcode": 1, "freq": "D"},
