@@ -40,7 +40,8 @@ PREDICTOR_SERIES = {
     "PCEPI":    {"desc": "PCE Price Index",                     "tcode": 5, "freq": "M"},
     "T10Y2Y":   {"desc": "10Y-2Y Treasury Yield Spread",        "tcode": 1, "freq": "D"},
     "BAA10Y":   {"desc": "BAA Corporate–10Y Treasury Spread",   "tcode": 1, "freq": "D"},
-    "SP500":    {"desc": "S&P 500 Index",                       "tcode": 5, "freq": "D"},
+    # FRED's SP500 series only starts 2016; NASDAQCOM is the best-coverage daily equity proxy
+    "NASDAQCOM": {"desc": "NASDAQ Composite Index",                  "tcode": 5, "freq": "D"},
 }
 
 ALL_SERIES = list(PREDICTOR_SERIES.keys()) + [GDP_SERIES]
@@ -63,7 +64,7 @@ PUBLICATION_LAGS_DAYS = {
     "UNRATE":   5,    # Employment situation same release as PAYEMS
     "T10Y2Y":   1,    # Financial series: essentially real-time (1-day lag)
     "BAA10Y":   1,
-    "SP500":    1,
+    "NASDAQCOM": 1,
 }
 
 # ---------------------------------------------------------------------------
