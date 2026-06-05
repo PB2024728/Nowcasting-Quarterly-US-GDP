@@ -11,14 +11,16 @@ See [`report.md`](report.md) for the full write-up including results and limitat
 | Model | Month 1 | Month 2 | Month 3 |
 |---|---|---|---|
 | AR(p) baseline | 2.47% | 2.47% | 2.47% |
-| Bridge combination | 2.22% | **1.89%** ✓ | **1.87%** ✓ |
-| MIDAS combination | **2.11%** ✓ | **1.93%** ✓ | **1.93%** ✓ |
+| Bridge combination | 2.22% | 1.89% ✓ | 1.87% ✓ |
+| MIDAS combination | 2.11% ✓ | 1.93% ✓ | 1.93% ✓ |
 | ElasticNet | 2.31% | 2.06% | 1.90% |
 | Lasso | 2.36% | 2.17% | 2.07% |
 | DFM | 2.85% | 2.79% | 2.77% |
+| **Method combination** | **1.90% ✓** | **1.77% ✓** | **1.72% ✓** |
 
 ✓ = significantly better than AR(p) at the 10% level (Diebold-Mariano test, HAC SE).  
-No model reaches the 5% threshold with 60 quarterly observations.
+No model reaches the 5% threshold with 60 quarterly observations.  
+The **method combination** (equal-weight average of Bridge, MIDAS, ElasticNet, DFM) is the overall best model.
 
 ---
 
@@ -80,6 +82,9 @@ python -c "from src.models.regularized import run_regularized; run_regularized(w
 
 # Day 8: Dynamic Factor Model (3 vintages, ~5–10 min)
 python -m src.models.dfm
+
+# Day 12: Method-family combination forecast
+python -m src.models.combination
 
 # Day 9: Master evaluation (DM tests, COVID analysis)
 python -m src.evaluation.master

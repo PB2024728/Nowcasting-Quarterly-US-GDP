@@ -46,6 +46,7 @@ _SUMMARY_MODELS = {
     "lasso", "lasso_covid",
     "elasticnet", "elasticnet_covid",
     "dfm",
+    "combination",
 }
 
 
@@ -85,6 +86,11 @@ def _parse_stem(stem: str) -> tuple[str, int | None]:
     m = re.fullmatch(r"(midas_.+)_(\d)", stem)
     if m:
         return m.group(1), int(m.group(2))
+
+    # combination_v{1,2,3}
+    m = re.fullmatch(r"combination_v(\d)", stem)
+    if m:
+        return "combination", int(m.group(1))
 
     return stem, None  # fallback
 

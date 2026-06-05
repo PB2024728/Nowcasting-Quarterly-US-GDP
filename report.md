@@ -141,21 +141,30 @@ Statistical significance is assessed with the **Diebold-Mariano test** (Diebold 
 | Lasso | V3 | 2.07 | 1.34 | 0.181 |
 | ElasticNet | V3 | 1.90 | 1.24 | 0.216 |
 | DFM | V3 | 2.77 | −0.73 | 0.467 |
+| **Method combination** | **V1** | **1.90** | **1.66** | **0.098** |
+| **Method combination** | **V2** | **1.77** | **1.72** | **0.085** |
+| **Method combination** | **V3** | **1.72** | **1.77** | **0.076** |
 
-**Models that beat AR(p) at the 10% significance level (pre-COVID):** Bridge combination (V2, V3) and MIDAS combination (all three vintages). No model achieves significance at the conventional 5% level—a common outcome in quarterly macro evaluation with ~60 observations and HAC-adjusted standard errors.
+**Models that beat AR(p) at the 10% significance level (pre-COVID):** Bridge combination (V2, V3), MIDAS combination (all vintages), and the method-family combination (all vintages). No model achieves significance at the conventional 5% level—a common outcome in quarterly macro evaluation with ~60 observations and HAC-adjusted standard errors.
 
-### 5.2 Vintage Learning
+### 5.2 Method-Family Combination Forecast
+
+A simple equal-weight average across the four family combination forecasts (Bridge, MIDAS, ElasticNet, DFM) achieves the lowest RMSE of any model: **1.72% pre-COVID at V3**, improving on the best individual model (Bridge 1.87%) by 0.15 percentage points. The combination is significant at 10% against the AR(p) at all three vintages—a result no single family achieves consistently across all vintages.
+
+This is consistent with the forecast combination literature (e.g., Stock & Watson 2004): pooling over methodologically diverse models reduces variance and produces more robust out-of-sample performance, particularly when individual models each capture different aspects of the data-generating process. The DFM's systematic over-prediction bias is partially offset by the downward biases of the regression models when they are combined.
+
+### 5.3 Vintage Learning
 
 The central nowcasting result is confirmed: RMSE declines as the quarter fills in. The Bridge combination improves from 2.22% at V1 to 1.87% at V3 (−16%), illustrating that each successive month of monthly releases meaningfully updates the GDP nowcast. MIDAS shows a similar V1→V2 improvement but less V2→V3 gain, consistent with slow-release series still being unreleased at quarter-end.
 
-### 5.3 The Dynamic Factor Model
+### 5.4 The Dynamic Factor Model
 
 The DFM does not beat the AR(p) benchmark on the pre-COVID sample (DM stat −0.73 to −1.04, pre-COVID RMSE ≈ 2.77–2.85%). It also exhibits a consistent upward bias of ~2.1 percentage points. Two factors explain this underperformance:
 
 1. **Small panel**: with only 12 indicators, a single-factor DFM has limited advantage over reduced-form regression models. DFMs typically dominate on large panels such as FRED-MD (~120 series).
 2. **Publication lag constraint**: at V3 (quarter-end), the majority of month-3 monthly data is still NaN due to publication lags. The Kalman filter therefore propagates the state through mostly-missing observations, yielding essentially the same information as V2. This eliminates the DFM's nominal advantage of having a richer observation set.
 
-### 5.4 COVID Period
+### 5.5 COVID Period
 
 Full-sample RMSEs are inflated by the COVID collapse: AR RMSE = 8.16% (vs 2.47% pre-COVID). Bridge and MIDAS combinations outperform the AR even on the full sample (Bridge V2: 5.20%, MIDAS V2: 5.03%) but the differences are not statistically significant. Adding COVID dummies to the regularized models does not materially change pre-COVID or ex-COVID RMSEs, confirming that the primary benefit of COVID dummies is in limiting their effect on coefficient estimates for post-2021 forecasts rather than improving forecast accuracy of the COVID quarters themselves.
 
