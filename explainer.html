@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nowcasting U.S. GDP — Plain Language Explainer</title>
+  <style>
+    /* ── CSS Variables ─────────────────────────────────────────────────────── */
+    :root {
+      --bg:           #f0f4f8;
+      --bg2:          #e2e8f0;
+      --card:         #ffffff;
+      --card2:        #f8fafc;
+      --text:         #1e293b;
+      --text2:        #475569;
+      --text3:        #94a3b8;
+      --accent:       #2563eb;
+      --accent-light: #dbeafe;
+      --accent-mid:   #93c5fd;
+      --border:       #e2e8f0;
+      --code-bg:      #f1f5f9;
+      --code-text:    #0f172a;
+      --success-bg:   #f0fdf4;
+      --success-bd:   #bbf7d0;
+      --success-text: #166534;
+      --warn-bg:      #fffbeb;
+      --warn-bd:      #fde68a;
+      --warn-text:    #92400e;
+      --hero-bg:      linear-gradient(135deg, #1e3a5f 0%, #1e40af 50%, #312e81 100%);
+      --shadow:       0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
+      --shadow-lg:    0 10px 30px rgba(0,0,0,.10);
+      --transition:   all .25s cubic-bezier(.4,0,.2,1);
+    }
+    html.dark {
+      --bg:           #0b1120;
+      --bg2:          #111827;
+      --card:         #1e293b;
+      --card2:        #162032;
+      --text:         #f1f5f9;
+      --text2:        #94a3b8;
+      --text3:        #64748b;
+      --accent:       #60a5fa;
+      --accent-light: #1e3a5f;
+      --accent-mid:   #3b82f6;
+      --border:       #334155;
+      --code-bg:      #0f172a;
+      --code-text:    #93c5fd;
+      --success-bg:   #052e16;
+      --success-bd:   #166534;
+      --success-text: #4ade80;
+      --warn-bg:      #1c1205;
+      --warn-bd:      #78350f;
+      --warn-text:    #fbbf24;
+      --hero-bg:      linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #1e1b4b 100%);
+      --shadow:       0 1px 4px rgba(0,0,0,.4), 0 4px 16px rgba(0,0,0,.3);
+      --shadow-lg:    0 12px 40px rgba(0,0,0,.5);
+    }
+
+    /* ── Reset & Base ──────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                   "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      transition: background .3s, color .3s;
+    }
+    ::selection { background: var(--accent-light); color: var(--accent); }
+
+    /* ── Sticky Nav ────────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+      transition: background .3s, border-color .3s;
+    }
+    .nav-brand {
+      font-weight: 700; font-size: .95rem;
+      color: var(--accent); text-decoration: none;
+      white-space: nowrap;
+    }
+    .nav-links {
+      display: flex; gap: .25rem; list-style: none;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a {
+      color: var(--text2); text-decoration: none;
+      font-size: .8rem; font-weight: 500;
+      padding: .35rem .65rem; border-radius: 6px;
+      transition: var(--transition); white-space: nowrap;
+    }
+    .nav-links a:hover { background: var(--accent-light); color: var(--accent); }
+    #theme-btn {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 8px; cursor: pointer;
+      padding: .4rem .75rem; font-size: .85rem;
+      color: var(--text); transition: var(--transition);
+      white-space: nowrap; flex-shrink: 0; margin-left: .5rem;
+    }
+    #theme-btn:hover { background: var(--accent-light); color: var(--accent); }
+
+    /* ── Hero ──────────────────────────────────────────────────────────────── */
+    .hero {
+      background: var(--hero-bg);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .hero-inner { position: relative; max-width: 760px; margin: 0 auto; }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.25);
+      color: #bfdbfe; font-size: .8rem; font-weight: 600;
+      padding: .3rem .9rem; border-radius: 20px;
+      margin-bottom: 1.25rem; letter-spacing: .05em;
+    }
+    .hero h1 {
+      color: #ffffff; font-size: clamp(1.8rem, 5vw, 2.9rem);
+      font-weight: 800; line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .hero h1 span { color: #93c5fd; }
+    .hero-sub {
+      color: #bfdbfe; font-size: 1.1rem;
+      max-width: 560px; margin: 0 auto 2rem;
+    }
+    .hero-kpis {
+      display: flex; gap: 1rem; justify-content: center;
+      flex-wrap: wrap; margin-top: 2rem;
+    }
+    .kpi-card {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 12px; padding: .9rem 1.4rem;
+      text-align: center; backdrop-filter: blur(4px);
+      min-width: 130px;
+    }
+    .kpi-card .kpi-val {
+      font-size: 1.8rem; font-weight: 800; color: #ffffff;
+      line-height: 1;
+    }
+    .kpi-card .kpi-label {
+      font-size: .75rem; color: #93c5fd;
+      margin-top: .3rem; font-weight: 500;
+    }
+    .kpi-card .kpi-delta {
+      font-size: .8rem; color: #86efac;
+      margin-top: .2rem; font-weight: 600;
+    }
+
+    /* ── Layout ────────────────────────────────────────────────────────────── */
+    main { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+    section { padding-top: 4rem; }
+    section + section { border-top: 1px solid var(--border); }
+
+    /* ── Typography ────────────────────────────────────────────────────────── */
+    h2 {
+      font-size: 1.65rem; font-weight: 800;
+      color: var(--text); margin-bottom: 1rem;
+      display: flex; align-items: center; gap: .5rem;
+    }
+    h2 .icon { font-size: 1.4rem; }
+    h3 {
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--text); margin: 1.5rem 0 .5rem;
+    }
+    p { color: var(--text2); margin-bottom: .85rem; }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text); font-weight: 700; }
+    em { color: var(--accent); font-style: normal; font-weight: 600; }
+
+    code {
+      background: var(--code-bg); color: var(--code-text);
+      font-family: "SF Mono", "Fira Code", "Cascadia Code", Consolas, monospace;
+      font-size: .85em; padding: .15em .4em;
+      border-radius: 4px; border: 1px solid var(--border);
+    }
+    pre {
+      background: var(--code-bg); color: var(--code-text);
+      font-family: "SF Mono", "Fira Code", Consolas, monospace;
+      font-size: .85rem; padding: 1.25rem 1.5rem;
+      border-radius: 10px; border: 1px solid var(--border);
+      overflow-x: auto; margin: 1rem 0; line-height: 1.7;
+    }
+
+    /* ── Cards ─────────────────────────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 1rem; margin: 1.25rem 0; }
+
+    /* ── Challenge cards ───────────────────────────────────────────────────── */
+    .challenge-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent-mid);
+      border-radius: 10px; padding: 1.1rem 1.3rem;
+      box-shadow: var(--shadow);
+    }
+    .challenge-num {
+      display: inline-block;
+      background: var(--accent-light); color: var(--accent);
+      font-weight: 800; font-size: .9rem;
+      width: 2rem; height: 2rem; border-radius: 50%;
+      text-align: center; line-height: 2rem;
+      margin-bottom: .5rem;
+    }
+    .challenge-card h3 { margin: 0 0 .4rem; font-size: 1rem; }
+    .challenge-card p  { font-size: .9rem; margin: 0; }
+
+    /* ── Tables ────────────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); margin: 1.25rem 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    thead { background: var(--accent); }
+    thead th { color: #fff; font-weight: 700; padding: .75rem 1rem; text-align: left; white-space: nowrap; }
+    tbody tr { transition: background .15s; }
+    tbody tr:nth-child(even) { background: var(--card2); }
+    tbody tr:hover { background: var(--accent-light); }
+    td { padding: .65rem 1rem; color: var(--text2); border-bottom: 1px solid var(--border); vertical-align: top; }
+    td:first-child { color: var(--text); font-weight: 600; font-family: "SF Mono", Consolas, monospace; font-size: .82rem; }
+    .results-table td:first-child { font-family: inherit; font-size: .9rem; }
+    .results-table td.best { color: #15803d; font-weight: 700; }
+    html.dark .results-table td.best { color: #4ade80; }
+    .results-table td.sig::after { content: " ✓"; color: #16a34a; font-weight: 700; }
+    html.dark .results-table td.sig::after { color: #4ade80; }
+    .results-table tr.combo-row { background: #fefce8; font-weight: 700; }
+    html.dark .results-table tr.combo-row { background: #1c1a05; }
+    .results-table tr.baseline-row td { color: var(--text3); }
+
+    /* ── Timeline ──────────────────────────────────────────────────────────── */
+    .timeline { position: relative; padding-left: 3rem; margin: 1.5rem 0; }
+    .timeline::before {
+      content: ""; position: absolute;
+      left: .95rem; top: 0; bottom: 0;
+      width: 2px; background: var(--border);
+    }
+    .day-item { position: relative; margin-bottom: 1.75rem; }
+    .day-item:last-child { margin-bottom: 0; }
+    .day-dot {
+      position: absolute; left: -2.95rem; top: .15rem;
+      width: 1.9rem; height: 1.9rem; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      font-size: .65rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+      border: 3px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--accent);
+      line-height: 1;
+    }
+    .day-header {
+      display: flex; align-items: center; gap: .6rem;
+      margin-bottom: .4rem;
+    }
+    .day-tag {
+      background: var(--accent-light); color: var(--accent);
+      font-size: .72rem; font-weight: 700;
+      padding: .2rem .6rem; border-radius: 20px;
+    }
+    .day-title { font-weight: 700; color: var(--text); font-size: .95rem; }
+    .day-body { color: var(--text2); font-size: .9rem; line-height: 1.65; }
+    .day-result {
+      display: inline-block; margin-top: .5rem;
+      background: var(--success-bg); color: var(--success-text);
+      border: 1px solid var(--success-bd);
+      border-radius: 6px; padding: .25rem .75rem;
+      font-size: .82rem; font-weight: 600;
+    }
+
+    /* ── Model analogy cards ───────────────────────────────────────────────── */
+    .model-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.1rem 1.3rem;
+      box-shadow: var(--shadow);
+    }
+    .model-card .model-name {
+      font-weight: 800; font-size: .95rem;
+      color: var(--text); margin-bottom: .25rem;
+    }
+    .model-card .model-desc { font-size: .88rem; color: var(--text2); margin-bottom: .5rem; }
+    .model-card .model-analogy {
+      font-size: .82rem; color: var(--text3);
+      font-style: italic; border-top: 1px solid var(--border);
+      padding-top: .4rem; margin-top: .4rem;
+    }
+    .model-card .model-analogy::before { content: "💡 "; font-style: normal; }
+
+    /* ── Callout boxes ─────────────────────────────────────────────────────── */
+    .callout {
+      border-radius: 10px; padding: 1.1rem 1.4rem;
+      margin: 1.25rem 0; border-left: 4px solid;
+      font-size: .92rem;
+    }
+    .callout-info  { background: var(--accent-light); border-color: var(--accent); color: var(--text); }
+    .callout-success { background: var(--success-bg); border-color: var(--success-bd); color: var(--success-text); }
+    .callout-warn  { background: var(--warn-bg); border-color: var(--warn-bd); color: var(--warn-text); }
+    .callout-title { font-weight: 800; margin-bottom: .35rem; display: flex; align-items: center; gap: .4rem; }
+    .callout p { margin: 0; color: inherit; }
+    .callout ul { margin: .4rem 0 0 1.2rem; }
+    .callout li { margin-bottom: .25rem; }
+
+    /* ── Vintage bar ───────────────────────────────────────────────────────── */
+    .vintage-bars { display: flex; gap: 1.25rem; margin: 1rem 0; flex-wrap: wrap; }
+    .vintage-item { flex: 1; min-width: 160px; }
+    .vintage-label { font-size: .8rem; font-weight: 700; color: var(--text2); margin-bottom: .4rem; }
+    .vintage-bar-wrap { background: var(--bg2); border-radius: 6px; overflow: hidden; height: 24px; }
+    .vintage-bar { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: .6rem; font-size: .78rem; font-weight: 700; color: #fff; transition: width 1s ease; }
+    .vintage-val { font-size: .75rem; color: var(--text3); margin-top: .3rem; font-weight: 600; }
+
+    /* ── Back to top ───────────────────────────────────────────────────────── */
+    #back-top {
+      position: fixed; bottom: 2rem; right: 2rem;
+      background: var(--accent); color: #fff;
+      width: 42px; height: 42px; border-radius: 50%;
+      border: none; cursor: pointer; font-size: 1.1rem;
+      box-shadow: var(--shadow-lg);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity .3s, transform .3s;
+      z-index: 99;
+    }
+    #back-top.visible { opacity: 1; transform: translateY(0); }
+    #back-top:hover { background: #1d4ed8; }
+
+    /* ── Footer ────────────────────────────────────────────────────────────── */
+    footer {
+      text-align: center; padding: 2rem; font-size: .82rem;
+      color: var(--text3); border-top: 1px solid var(--border);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* ── Responsive ────────────────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .hero { padding: 3.5rem 1.25rem 3rem; }
+      main { padding: 0 1rem 4rem; }
+      .hero-kpis { gap: .6rem; }
+      .kpi-card { min-width: 110px; padding: .7rem 1rem; }
+      .kpi-card .kpi-val { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<nav>
+  <a class="nav-brand" href="#">📈 GDP Nowcasting</a>
+  <ul class="nav-links">
+    <li><a href="#big-idea">Hypothesis</a></li>
+    <li><a href="#challenge">Challenge</a></li>
+    <li><a href="#data">Data</a></li>
+    <li><a href="#timeline">Day by Day</a></li>
+    <li><a href="#models">Models</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#limitations">Limitations</a></li>
+    <li><a href="#takeaway">Takeaway</a></li>
+  </ul>
+  <button id="theme-btn" onclick="toggleTheme()" title="Toggle dark/light mode">🌙 Dark</button>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────────────────────── -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Pre-Masters Research Project · 2026</div>
+    <h1>Nowcasting <span>U.S. GDP Growth</span><br>— Plain Language Explainer —</h1>
+    <p class="hero-sub">Can monthly economic data predict GDP <em style="color:#86efac;font-style:normal">before</em> the official estimate arrives? We tested five different methods on 20 years of data to find out.</p>
+    <div class="hero-kpis">
+      <div class="kpi-card">
+        <div class="kpi-val">2.47%</div>
+        <div class="kpi-label">AR Baseline RMSE</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val">1.72%</div>
+        <div class="kpi-label">Best Model RMSE</div>
+        <div class="kpi-delta">↓ 30% improvement</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val">85</div>
+        <div class="kpi-label">OOS Quarters Tested</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val">12</div>
+        <div class="kpi-label">Monthly Indicators</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-val">5</div>
+        <div class="kpi-label">Model Families</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main Content ─────────────────────────────────────────────────────────── -->
+<main>
+
+  <!-- ── 1. The Big Idea ─────────────────────────────────────────────────── -->
+  <section id="big-idea">
+    <h2><span class="icon">💡</span> The Hypothesis &amp; Motivation</h2>
+
+    <p>Every three months, the U.S. government publishes an official estimate of how fast the economy grew. This number — <strong>GDP growth</strong> — is one of the most watched economic statistics in the world. The problem is that it arrives about <strong>six weeks after the quarter ends</strong>, and the first estimate is still subject to revision for years afterward.</p>
+
+    <div class="callout callout-info">
+      <div class="callout-title">🎯 The Central Question</div>
+      <p>Monthly economic indicators — factory output, job numbers, retail sales, stock prices — stream in <em>throughout</em> the quarter as it happens. <strong>Can we use these early signals to predict the GDP number before the official estimate is released?</strong> And if so, how much more accurate are these predictions compared to simply extrapolating past GDP patterns?</p>
+    </div>
+
+    <p>This is called <strong>"nowcasting"</strong> — a portmanteau of "now" and "forecasting." The term originated in weather science and was adopted by central banks (the Fed, ECB, Bank of England) who need real-time economic intelligence before official statistics are published.</p>
+
+    <p>This project tests that hypothesis rigorously. We built and compared five different forecasting approaches, evaluated them on 20 years of out-of-sample data, and quantified which methods work, by how much, and at what level of statistical confidence.</p>
+  </section>
+
+  <!-- ── 2. The Challenge ─────────────────────────────────────────────────── -->
+  <section id="challenge">
+    <h2><span class="icon">⚡</span> Why This Is Hard</h2>
+    <p>A few things make GDP nowcasting genuinely challenging — and these are problems the project had to solve explicitly:</p>
+
+    <div class="card-grid">
+      <div class="challenge-card">
+        <div class="challenge-num">1</div>
+        <h3>The Timing Mismatch</h3>
+        <p>GDP is quarterly. Monthly indicators arrive throughout the quarter. A forecast made in early January uses different data than one made in late March, even though both are predicting the same Q1 GDP number. This "mixed frequency" problem requires special methods.</p>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-num">2</div>
+        <h3>The Publication Delay</h3>
+        <p>Data doesn't arrive the moment the reference month ends. Payrolls come out ~5 days after month-end. Factory output takes ~17 days. Durable goods takes ~28 days. We simulate exactly which data would have been available to a real forecaster on any given date.</p>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-num">3</div>
+        <h3>Too Few Data Points</h3>
+        <p>We only have ~60 "normal" (pre-COVID) quarters to evaluate on. That's not many data points, which means statistical tests have limited power — it's genuinely hard to prove one method is better than another with high confidence.</p>
+      </div>
+      <div class="challenge-card">
+        <div class="challenge-num">4</div>
+        <h3>The COVID Outlier</h3>
+        <p>The 2020Q2 GDP collapse (−31.6% annualized) is so extreme it distorts every metric. No model trained on normal economic data could have predicted a pandemic. We report results three ways: including COVID, excluding it, and pre-COVID only.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">⚠️ The "Ragged Edge" Problem</div>
+      <p>At any given point in time, the most recent data look like a table with ragged right edges — some months have all 12 series published, the most recent months are partially filled in, and the current month is mostly empty. Every model in this project was evaluated using <em>only the data that would have been available on the forecast date</em> — never anything from the future.</p>
+    </div>
+  </section>
+
+  <!-- ── 3. The Data ──────────────────────────────────────────────────────── -->
+  <section id="data">
+    <h2><span class="icon">📊</span> The Data</h2>
+
+    <p>All data comes from <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED</a> (Federal Reserve Economic Data), a free public database maintained by the St. Louis Fed.</p>
+
+    <h3>The Target — What We're Predicting</h3>
+    <p><code>GDPC1</code> — Real GDP (chained 2017 dollars, seasonally adjusted). Transformed to: <code>400 × log(GDP_t / GDP_{t-1})</code> — annualized quarterly percent growth. Over our sample (1990–2026), this averages about 2.4% with a standard deviation of 4.4%.</p>
+
+    <h3>The 12 Monthly Predictors</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Series ID</th><th>What It Measures</th><th>Transform</th><th>Publication Lag</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>INDPRO</td><td>Industrial production — how much factories, mines &amp; utilities are producing</td><td>Log-diff</td><td>~17 days</td></tr>
+          <tr><td>PAYEMS</td><td>Nonfarm payrolls — total people on payrolls across the economy</td><td>Log-diff</td><td>~5 days</td></tr>
+          <tr><td>RSAFS</td><td>Retail &amp; food services sales — what consumers are spending</td><td>Log-diff</td><td>~14 days</td></tr>
+          <tr><td>UNRATE</td><td>Unemployment rate — % of labor force actively seeking work</td><td>First-diff</td><td>~5 days</td></tr>
+          <tr><td>ICSA</td><td>Initial jobless claims — people filing for unemployment for the first time each week</td><td>Log-diff</td><td>~5 days</td></tr>
+          <tr><td>HOUST</td><td>Housing starts — new residential units beginning construction</td><td>Log-diff</td><td>~19 days</td></tr>
+          <tr><td>DGORDER</td><td>Durable goods orders — orders for goods lasting 3+ years (planes, vehicles, machinery)</td><td>Log-diff</td><td>~28 days</td></tr>
+          <tr><td>UMCSENT</td><td>Consumer sentiment — how households feel about personal finances &amp; the economy</td><td>First-diff</td><td>0 days</td></tr>
+          <tr><td>PCEPI</td><td>PCE price index — the Fed's preferred inflation measure</td><td>Log-diff</td><td>~28 days</td></tr>
+          <tr><td>T10Y2Y</td><td>Yield curve spread — 10-year minus 2-year Treasury yields (negative = recession signal)</td><td>First-diff</td><td>~1 day</td></tr>
+          <tr><td>BAA10Y</td><td>Credit spread — extra interest rate corporations pay over risk-free Treasuries</td><td>First-diff</td><td>~1 day</td></tr>
+          <tr><td>NASDAQCOM</td><td>NASDAQ Composite — broad equity market proxy for investor sentiment</td><td>Log-diff</td><td>~1 day</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-title">📐 Why "Transform" the Data?</div>
+      <p>Raw levels (e.g., industrial production at 103.2) have trends over time. Regression models need stationary series — ones that don't systematically drift. <strong>Log-differences</strong> give approximate percentage changes (e.g., +0.3% month-on-month). <strong>First differences</strong> remove the trend from rates and spreads. After transformation, all 12 series are stationary and ready for modelling.</p>
+    </div>
+  </section>
+
+  <!-- ── 4. Day-by-Day ────────────────────────────────────────────────────── -->
+  <section id="timeline">
+    <h2><span class="icon">📅</span> Day-by-Day: What We Built</h2>
+    <p>The project followed a strict 12-day build plan, with working committed code at the end of each day. Here's what each day produced:</p>
+
+    <div class="timeline">
+
+      <div class="day-item">
+        <div class="day-dot">1</div>
+        <div class="day-header">
+          <span class="day-tag">Day 1</span>
+          <span class="day-title">Project Scaffolding</span>
+        </div>
+        <div class="day-body">Set up the code structure, installed all dependencies, created a central <code>config.py</code> that stores all settings in one place (series IDs, publication lags, date ranges, file paths), and initialized git. Nothing fancy — just making sure every subsequent day has a clean, organized place to put things.</div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">2</div>
+        <div class="day-header">
+          <span class="day-tag">Day 2</span>
+          <span class="day-title">Getting the Data</span>
+        </div>
+        <div class="day-body">Built a data fetcher that downloads all 13 FRED series and saves them to disk as parquet files. Key feature: once downloaded, re-running takes ~1 second from cache rather than hitting the internet. Daily series were averaged to monthly; weekly claims were summed. One discovery: FRED's SP500 series only goes back to 2016 — replaced with NASDAQCOM (full history from 1990).</div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">3</div>
+        <div class="day-header">
+          <span class="day-tag">Day 3</span>
+          <span class="day-title">The Ragged Edge — Core Infrastructure</span>
+        </div>
+        <div class="day-body">
+          Built the publication-lag masker: takes any "as-of" date and sets cells to missing where the underlying release wouldn't have happened yet. Also applied stationarity transforms to all series. Defined the three evaluation vintages:
+          <ul style="margin:.5rem 0 0 1.2rem;font-size:.88rem;color:var(--text2)">
+            <li><strong>Vintage 1 (V1)</strong> — as of the last day of month 1 of the quarter</li>
+            <li><strong>Vintage 2 (V2)</strong> — as of the last day of month 2</li>
+            <li><strong>Vintage 3 (V3)</strong> — as of the last day of month 3</li>
+          </ul>
+          Written with 5 unit tests verifying the masker works correctly.
+        </div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">4</div>
+        <div class="day-header">
+          <span class="day-tag">Day 4</span>
+          <span class="day-title">Benchmarks — The Bar to Beat</span>
+        </div>
+        <div class="day-body">Built the <strong>AR(p) autoregression</strong> (uses only past GDP; lag length auto-selected by BIC) and <strong>Random Walk</strong> (predicts the historical mean). Both evaluated using an expanding-window backtest starting in 2005Q1 — faithfully mimicking a real forecaster who never looks at future data.
+          <div class="day-result">📊 AR(p) pre-COVID RMSE = 2.47% — this is the bar every other model must clear</div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">5</div>
+        <div class="day-header">
+          <span class="day-tag">Day 5</span>
+          <span class="day-title">Bridge Equations</span>
+        </div>
+        <div class="day-body">For each of the 12 monthly indicators: aggregate to quarterly frequency, regress GDP growth on that indicator + last quarter's GDP, predict. Combine all 12 forecasts by simple averaging. If only 1–2 months of the quarter are available, use whatever's there (partial aggregation).
+          <div class="day-result">📊 Bridge combination V3 RMSE = 1.87% — beats AR by 24%</div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">6</div>
+        <div class="day-header">
+          <span class="day-tag">Day 6</span>
+          <span class="day-title">MIDAS Regression</span>
+        </div>
+        <div class="day-body">Instead of collapsing three monthly observations into one quarterly average, MIDAS keeps all three as separate features. This gives the model more granularity — it can learn that month 2's payrolls carry more signal than month 1's. Unreleased months filled with last-known value (carry-forward).
+          <div class="day-result">📊 MIDAS combination V1 RMSE = 2.11% — beats bridge at the earliest vintage</div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">7</div>
+        <div class="day-header">
+          <span class="day-tag">Day 7</span>
+          <span class="day-title">Regularized Regression (Lasso &amp; ElasticNet)</span>
+        </div>
+        <div class="day-body">Combines all 12 indicators with 3 monthly lags each into a single 37-feature model. With ~60–80 training quarters, ordinary regression would overfit. Lasso forces most coefficients to zero (automatic variable selection). ElasticNet handles correlated predictors. Hyperparameters tuned by time-series cross-validation (no future peeking). Logged which variables were selected: INDPRO, PAYEMS, ICSA, NASDAQ selected in ≥95% of quarters.
+          <div class="day-result">📊 ElasticNet V3 RMSE = 1.90% — competitive with bridge</div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">8</div>
+        <div class="day-header">
+          <span class="day-tag">Day 8</span>
+          <span class="day-title">Dynamic Factor Model (DFM)</span>
+        </div>
+        <div class="day-body">The most sophisticated model: extracts one hidden "economic activity" factor from all 12 indicators simultaneously using a Kalman filter (originally developed for rocket guidance systems). Handles missing data natively — no imputation needed. But with only 12 indicators and publication lags meaning most month-3 data is still missing at quarter-end, the model can't leverage its theoretical advantages.
+          <div class="day-result" style="background:var(--warn-bg);color:var(--warn-text);border-color:var(--warn-bd)">⚠️ DFM V3 RMSE = 2.77% — unexpectedly worse than the AR baseline</div>
+        </div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">9</div>
+        <div class="day-header">
+          <span class="day-tag">Day 9</span>
+          <span class="day-title">Rigorous Statistical Evaluation</span>
+        </div>
+        <div class="day-body">Implemented the <strong>Diebold-Mariano test</strong> — a formal statistical test for whether one model is significantly better than another. Results reported for three sample windows: full OOS, pre-COVID, and COVID-excluded. Also tested COVID dummy variables in the regularized regression models.</div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">10</div>
+        <div class="day-header">
+          <span class="day-tag">Day 10</span>
+          <span class="day-title">Publication Figures</span>
+        </div>
+        <div class="day-body">Generated four publication-quality figures: RMSE comparison bar chart, time-series of GDP vs. nowcasts (with COVID shading), RMSE-vs-vintage "information arrival" chart, and Lasso variable selection stability map. All saved as PNG (300 DPI) and PDF.</div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">11</div>
+        <div class="day-header">
+          <span class="day-tag">Day 11</span>
+          <span class="day-title">Research Report &amp; Documentation</span>
+        </div>
+        <div class="day-body">Wrote the full technical research report documenting methodology, results, and limitations. Updated README with complete reproduction instructions (clone → install → set API key → run pipeline in order).</div>
+      </div>
+
+      <div class="day-item">
+        <div class="day-dot">12</div>
+        <div class="day-header">
+          <span class="day-tag">Day 12</span>
+          <span class="day-title">Combination Forecast &amp; Final Polish</span>
+        </div>
+        <div class="day-body">Built a <strong>method-family combination forecast</strong> — a simple equal-weight average of Bridge, MIDAS, ElasticNet, and DFM. Expanded the test suite from 5 to 19 tests. Tagged version v1.0. The combination turned out to be the best result of the entire project.
+          <div class="day-result">🏆 Combination V3 RMSE = 1.72% — the overall winner</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── 5. Models ────────────────────────────────────────────────────────── -->
+  <section id="models">
+    <h2><span class="icon">🔬</span> The Models Explained Simply</h2>
+    <p>Here's an intuitive comparison of all six approaches — what each one actually does, and an everyday analogy to make it concrete:</p>
+
+    <div class="card-grid">
+      <div class="model-card">
+        <div class="model-name">AR(p) — Autoregression</div>
+        <div class="model-desc">Uses only past GDP values to predict future GDP. Automatically picks how many past quarters to include. The benchmark that everything else must beat.</div>
+        <div class="model-analogy">Predicting tomorrow's weather using only today's temperature — no other data allowed.</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Bridge Equations</div>
+        <div class="model-desc">Each of the 12 indicators gets its own simple regression against GDP. The 12 individual forecasts are then averaged together. Handles ragged edge with partial quarterly averages.</div>
+        <div class="model-analogy">12 expert analysts each read one indicator and give a GDP estimate. Take the average of all 12 opinions.</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">MIDAS Regression</div>
+        <div class="model-desc">Like bridge, but keeps the three monthly observations within a quarter as separate features rather than averaging them. Lets the model weight months differently.</div>
+        <div class="model-analogy">Same 12 experts, but each one can split their opinion across early, middle, and late month observations — more granular signal.</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Lasso / ElasticNet</div>
+        <div class="model-desc">All 12 indicators × 3 monthly lags = 37 features in one model. Regularization automatically zeros out unimportant features, preventing overfitting. Trained with time-series cross-validation.</div>
+        <div class="model-analogy">One expert reads all 37 data points at once but has a strict "ignore the noise" rule that forces them to focus on only the most informative signals.</div>
+      </div>
+      <div class="model-card">
+        <div class="model-name">Dynamic Factor Model</div>
+        <div class="model-desc">Assumes a hidden "economic health" factor drives all 12 indicators simultaneously. Uses the Kalman filter to estimate this factor and extract a GDP nowcast. Handles missing data natively.</div>
+        <div class="model-analogy">A doctor diagnosing overall health from 12 vital signs — not reading each one separately, but looking for the underlying condition that explains all of them together.</div>
+      </div>
+      <div class="model-card" style="border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light);">
+        <div class="model-name" style="color:var(--accent)">🏆 Method Combination</div>
+        <div class="model-desc">Simple equal-weight average of the Bridge, MIDAS, ElasticNet, and DFM forecasts. No single model dominates. Biases from different models partially cancel out, and prediction variance is reduced through diversification.</div>
+        <div class="model-analogy">A committee vote where every method family gets one equal vote. No single approach can dominate, and errors tend to offset each other.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 6. Results ───────────────────────────────────────────────────────── -->
+  <section id="results">
+    <h2><span class="icon">📈</span> The Results</h2>
+
+    <h3>Headline RMSE Table (Pre-COVID, 2005Q1–2019Q4)</h3>
+    <p><em>Numbers are RMSE in annualised percent. Lower = better. ✓ = significantly better than AR at the 10% level (Diebold-Mariano test).</em></p>
+
+    <div class="table-wrap">
+      <table class="results-table">
+        <thead>
+          <tr><th>Model</th><th>Month 1</th><th>Month 2</th><th>Month 3</th></tr>
+        </thead>
+        <tbody>
+          <tr class="baseline-row">
+            <td style="font-family:inherit">AR(p) — the bar to beat</td>
+            <td>2.47%</td><td>2.47%</td><td>2.47%</td>
+          </tr>
+          <tr>
+            <td style="font-family:inherit">Bridge combination</td>
+            <td>2.22%</td>
+            <td class="sig">1.89%</td>
+            <td class="sig">1.87%</td>
+          </tr>
+          <tr>
+            <td style="font-family:inherit">MIDAS combination</td>
+            <td class="sig">2.11%</td>
+            <td class="sig">1.93%</td>
+            <td class="sig">1.93%</td>
+          </tr>
+          <tr>
+            <td style="font-family:inherit">Lasso</td>
+            <td>2.36%</td><td>2.17%</td><td>2.07%</td>
+          </tr>
+          <tr>
+            <td style="font-family:inherit">ElasticNet</td>
+            <td>2.31%</td><td>2.06%</td><td>1.90%</td>
+          </tr>
+          <tr>
+            <td style="font-family:inherit">DFM</td>
+            <td>2.85%</td><td>2.79%</td><td>2.77%</td>
+          </tr>
+          <tr class="combo-row">
+            <td style="font-family:inherit">🏆 Method combination</td>
+            <td class="sig best">1.90%</td>
+            <td class="sig best">1.77%</td>
+            <td class="sig best">1.72%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>What the Numbers Actually Mean</h3>
+    <p>A typical pre-COVID quarter grew at about 2–3%. The AR model's forecast error was ±2.47 percentage points. The best model — the combination at vintage 3 — brought that down to ±1.72 percentage points: a <strong>30% reduction in forecast error</strong>.</p>
+
+    <div class="callout callout-success">
+      <div class="callout-title">✅ Concrete Example</div>
+      <p>If GDP is going to grow at exactly 2.5%, the AR model's forecast could easily land anywhere from 0% to 5%. The combination model narrows that to roughly 0.8% to 4.2% — a meaningfully tighter interval for decision-makers.</p>
+    </div>
+
+    <h3>The "Vintage Learning" Story</h3>
+    <p>The central nowcasting result is confirmed: <strong>forecasts get more accurate as the quarter fills in.</strong> Here's the Bridge combination's improvement across vintages:</p>
+
+    <div class="vintage-bars">
+      <div class="vintage-item">
+        <div class="vintage-label">End of Month 1</div>
+        <div class="vintage-bar-wrap">
+          <div class="vintage-bar" style="width:89%;background:linear-gradient(90deg,#3b82f6,#60a5fa)">2.22%</div>
+        </div>
+        <div class="vintage-val">Barely better than AR — little data in yet</div>
+      </div>
+      <div class="vintage-item">
+        <div class="vintage-label">End of Month 2</div>
+        <div class="vintage-bar-wrap">
+          <div class="vintage-bar" style="width:75%;background:linear-gradient(90deg,#2563eb,#3b82f6)">1.89%</div>
+        </div>
+        <div class="vintage-val">Big jump — payrolls &amp; IP are now published</div>
+      </div>
+      <div class="vintage-item">
+        <div class="vintage-label">End of Month 3</div>
+        <div class="vintage-bar-wrap">
+          <div class="vintage-bar" style="width:74%;background:linear-gradient(90deg,#1d4ed8,#2563eb)">1.87%</div>
+        </div>
+        <div class="vintage-val">Marginal improvement — most data still unpublished!</div>
+      </div>
+    </div>
+
+    <p>The tiny Month 2 → Month 3 improvement is a key insight: at the end of Month 3 (quarter-end), <em>most monthly data is still missing</em> because publication lags extend into the following month. "End of month 3" is informationally much closer to "end of month 2" than you'd expect.</p>
+
+    <h3>Why the DFM Underperforms</h3>
+    <div class="callout callout-warn">
+      <div class="callout-title">⚠️ The DFM Result: 2.77% — Worse than the AR Baseline</div>
+      <p>The DFM was expected to be the flagship model. Central banks use it everywhere. But with only 12 indicators and the publication-lag constraint, it can't show its potential. Two reasons:</p>
+      <ul>
+        <li><strong>Too few indicators.</strong> Central banks run DFMs with 50–200 series. With 12, there's not enough diversity of signal for the latent factor structure to add value over simpler regression.</li>
+        <li><strong>The publication lag trap.</strong> At quarter-end, most monthly data is still NaN. The Kalman filter has nothing to update with, so it essentially uses the same information as Month 2. No practical advantage over simpler models.</li>
+      </ul>
+    </div>
+
+    <h3>Why the Combination Wins</h3>
+    <p>The method combination (1.72% pre-COVID RMSE) beats every individual model. This happens because of <strong>bias cancellation</strong>:</p>
+    <ul style="margin:.5rem 0 .85rem 1.2rem;color:var(--text2)">
+      <li>Bridge and MIDAS consistently <em>under-predict</em> GDP growth (negative bias)</li>
+      <li>The DFM consistently <em>over-predicts</em> (positive bias, ~+2.1pp)</li>
+      <li>When averaged, these biases partially offset each other</li>
+      <li>The combination also reduces prediction variance through diversification — the same reason a financial portfolio is less risky than any single stock</li>
+    </ul>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">⚠️ What Didn't Work</div>
+      <p><strong>Nothing is significant at the 5% level</strong> — the conventional gold standard. With only 60 quarterly observations in the pre-COVID sample, confidence intervals are wide. This is a fundamental constraint of quarterly macroeconomic evaluation, not a failure of the methods. Significance at the 10% level is the realistic bar here.</p>
+    </div>
+  </section>
+
+  <!-- ── 7. Limitations ───────────────────────────────────────────────────── -->
+  <section id="limitations">
+    <h2><span class="icon">🔎</span> Key Limitations</h2>
+    <p>Good research is honest about what it can and cannot claim. Here are the four most important caveats:</p>
+
+    <div class="callout callout-warn" style="margin-bottom:1rem">
+      <div class="callout-title">⚠️ Revised Data, Not Real-Time Data</div>
+      <p>The FRED data used here is the <em>current, most recently revised</em> vintage. A forecaster working in 2005 would have seen noisier, less reliable data — revisions hadn't happened yet. This means our accuracy figures are <strong>probably slightly optimistic</strong>. A fully rigorous study would use ALFRED (Archival FRED) to get the exact data available on each historical date.</p>
+    </div>
+
+    <div class="callout callout-warn" style="margin-bottom:1rem">
+      <div class="callout-title">⚠️ Approximate Publication Lags</div>
+      <p>The publication delays in our model are fixed constants (e.g., "payrolls = 5 days after month-end"). In reality, release dates shift by a few days each month, and occasional delays occur. A production nowcasting system would track the actual release calendar in real time.</p>
+    </div>
+
+    <div class="callout callout-warn" style="margin-bottom:1rem">
+      <div class="callout-title">⚠️ No Comparison Against Professionals</div>
+      <p>The NY Fed publishes a weekly nowcast. The Survey of Professional Forecasters publishes quarterly consensus estimates. We don't know whether our methods add value beyond what professional forecasters already produce with much larger datasets and more sophisticated systems.</p>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-title">⚠️ Small Panel for the DFM</div>
+      <p>A production dynamic factor model at a central bank would use 100+ series. Our DFM with 12 indicators reflects a small-panel limitation, not the fundamental potential of the approach. With FRED-MD's ~120 series, the DFM would likely perform much better.</p>
+    </div>
+  </section>
+
+  <!-- ── 8. Takeaway ──────────────────────────────────────────────────────── -->
+  <section id="takeaway">
+    <h2><span class="icon">🎯</span> The Big Takeaway</h2>
+
+    <div class="callout callout-success" style="font-size:1rem">
+      <div class="callout-title" style="font-size:1.05rem">✅ The Answer to the Hypothesis</div>
+      <p><strong>Yes — monthly economic data does help predict GDP before the official estimate arrives.</strong> But the improvement is modest, and mainly materialises in the <em>middle</em> of the quarter once the most informative series (payrolls, industrial production) have been released.</p>
+    </div>
+
+    <p>The best result — a <strong>30% reduction in forecast error</strong> relative to a pure time-series baseline — is economically meaningful but statistically fragile with only 60 quarterly observations. The combination of methods adds genuine value through bias diversification.</p>
+
+    <p>Surprisingly, the simple methods (bridge equations, MIDAS) perform as well as or better than the more sophisticated approaches (Lasso, ElasticNet, DFM) on this dataset size. Complexity doesn't always win.</p>
+
+    <div class="card" style="text-align:center;padding:2rem;margin-top:1.5rem">
+      <div style="font-size:2.5rem;margin-bottom:.75rem">🏆</div>
+      <div style="font-size:1.25rem;font-weight:800;color:var(--accent);margin-bottom:.5rem">If you had to pick one model for live nowcasting with 12 indicators...</div>
+      <div style="font-size:1rem;color:var(--text2)">Use the <strong>method combination</strong> — equal-weight average of Bridge, MIDAS, ElasticNet, and DFM.<br>Pre-COVID RMSE = <strong>1.72%</strong> at Month 3 vintage, significant at the 10% level for all three vintages.</div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ────────────────────────────────────────────────────────────────── -->
+<footer>
+  <p><strong>Proteek Basu</strong> · Pre-Masters Project #3 · June 2026</p>
+  <p style="margin-top:.4rem">Data: <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">FRED (St. Louis Fed)</a> ·
+     Evaluation period: 2005Q1–2026Q1 ·
+     Git tag: <code>v1.0</code></p>
+</footer>
+
+<!-- ── Back to Top ───────────────────────────────────────────────────────────── -->
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<!-- ── Scripts ───────────────────────────────────────────────────────────────── -->
+<script>
+  /* ── Dark/Light mode ─────────────────────────────────────────────────── */
+  const btn = document.getElementById('theme-btn');
+
+  function applyTheme(dark) {
+    if (dark) {
+      document.documentElement.classList.add('dark');
+      btn.textContent = '☀️ Light';
+    } else {
+      document.documentElement.classList.remove('dark');
+      btn.textContent = '🌙 Dark';
+    }
+  }
+
+  function toggleTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    localStorage.setItem('gdp-theme', isDark ? 'light' : 'dark');
+    applyTheme(!isDark);
+  }
+
+  // Load saved preference on page load
+  (function() {
+    const saved = localStorage.getItem('gdp-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    applyTheme(saved ? saved === 'dark' : prefersDark);
+  })();
+
+  /* ── Back-to-top visibility ──────────────────────────────────────────── */
+  const backBtn = document.getElementById('back-top');
+  window.addEventListener('scroll', () => {
+    backBtn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+
+  /* ── Smooth active nav link highlighting ─────────────────────────────── */
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.style.background = '';
+          link.style.color = '';
+          if (link.getAttribute('href') === '#' + entry.target.id) {
+            link.style.background = 'var(--accent-light)';
+            link.style.color = 'var(--accent)';
+          }
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  /* ── Animate vintage bars on scroll ─────────────────────────────────── */
+  const bars = document.querySelectorAll('.vintage-bar');
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Bars start at width:0 and transition to their set width
+        entry.target.style.width = entry.target.getAttribute('data-w') || entry.target.style.width;
+      }
+    });
+  }, { threshold: 0.3 });
+
+  bars.forEach(bar => {
+    const w = bar.style.width;
+    bar.setAttribute('data-w', w);
+    bar.style.width = '0';
+    barObserver.observe(bar);
+  });
+</script>
+</body>
+</html>
