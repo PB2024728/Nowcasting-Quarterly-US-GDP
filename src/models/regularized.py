@@ -63,22 +63,30 @@ _L1_RATIO_GRID = [0.1, 0.5, 0.7, 0.9, 0.95]
 # Feature engineering
 # ---------------------------------------------------------------------------
 
-def _feature_names(k: int = K) -> list[str]:
-    return [f"{sid}_m{j}" for sid in PREDICTOR_SERIES for j in range(1, k + 1)] + ["gdp_lag"]
+_COVID_DUMMIES = ["covid_2020q2", "covid_2020q3"]
+_COVID_QUARTERS = {
+    "covid_2020q2": pd.Period("2020Q2", "Q"),
+    "covid_2020q3": pd.Period("2020Q3", "Q"),
+}
+
+
+def _feature_names(k: int = K, with_covid_dummies: bool = False) -> list[str]:
+    base = [f"{sid}_m{j}" for sid in PREDICTOR_SERIES for j in range(1, k + 1)] + ["gdp_lag"]
+    return base + _COVID_DUMMIES if with_covid_dummies else base
 
 
 def _precompute_feature_matrix(
     monthly_panel: pd.DataFrame,
     target: pd.Series,
     k: int = K,
+    with_covid_dummies: bool = False,
 ) -> pd.DataFrame:
     """
     Build quarterly DataFrame with k monthly lags per indicator + gdp_lag + y.
-    Rows with missing months (short-history series in early 1990s) retain NaN
-    and are dropped at fit time via dropna().
+    Optionally appends binary COVID quarter dummies (2020Q2, 2020Q3).
+    Rows with missing months retain NaN and are dropped at fit time via dropna().
     """
     y_lag = target.shift(1)
-    names = _feature_names(k)
     rows = []
 
     for q in target.dropna().index:
@@ -90,6 +98,9 @@ def _precompute_feature_matrix(
             for j in range(1, k + 1):
                 row[f"{sid}_m{j}"] = x_vals[j - 1] if len(x_vals) >= j else np.nan
         row["gdp_lag"] = float(y_lag.get(q, np.nan))
+        if with_covid_dummies:
+            for name, cq in _COVID_QUARTERS.items():
+                row[name] = 1.0 if q == cq else 0.0
         row["y"] = float(target.get(q, np.nan))
         rows.append(row)
 
@@ -104,9 +115,10 @@ def _forecast_feature_vector(
     vintage: int,
     y_lag_q: float,
     k: int = K,
+    with_covid_dummies: bool = False,
 ) -> np.ndarray:
     """
-    Build the 37-element feature vector for quarter q at a given vintage.
+    Build the feature vector for quarter q at a given vintage.
     Unreleased monthly cells are LOCF-filled from the most recent available value.
     """
     as_of = vintage_as_of(q, vintage)
@@ -121,6 +133,9 @@ def _forecast_feature_vector(
         vals = q_rows[sid].values if len(q_rows) >= k else np.full(k, np.nan)
         feat.extend(vals[:k].tolist())
     feat.append(y_lag_q)
+    if with_covid_dummies:
+        for name, cq in _COVID_QUARTERS.items():
+            feat.append(1.0 if q == cq else 0.0)
 
     return np.array(feat, dtype=float)
 
@@ -185,7 +200,7 @@ def _load(name: str) -> pd.DataFrame:
 # Main runner
 # ---------------------------------------------------------------------------
 
-def run_regularized() -> pd.DataFrame:
+def run_regularized(with_covid_dummies: bool = False) -> pd.DataFrame:
     """
     Run Lasso and ElasticNet expanding-window OOS for all three vintages.
     Returns metrics DataFrame; saves forecast parquets, selection log, and metrics CSV.
@@ -194,9 +209,10 @@ def run_regularized() -> pd.DataFrame:
     target = load_quarterly_target()
     y_lag_series = target.shift(1)
 
+    suffix = "_covid" if with_covid_dummies else ""
     print("  Precomputing full feature matrix ...")
-    feat_matrix = _precompute_feature_matrix(monthly_panel, target)
-    feat_names = _feature_names()
+    feat_matrix = _precompute_feature_matrix(monthly_panel, target, with_covid_dummies=with_covid_dummies)
+    feat_names = _feature_names(with_covid_dummies=with_covid_dummies)
 
     oos_start = pd.Period(OOS_START, freq="Q")
     oos_quarters = target.dropna().index[target.dropna().index >= oos_start]
@@ -218,7 +234,7 @@ def run_regularized() -> pd.DataFrame:
             train_df = feat_matrix[feat_matrix.index < q].dropna()
 
             # Forecast feature vector (LOCF)
-            x_fcst = _forecast_feature_vector(monthly_panel, q, v, y_lag_q)
+            x_fcst = _forecast_feature_vector(monthly_panel, q, v, y_lag_q, with_covid_dummies=with_covid_dummies)
             has_nan = np.isnan(y_lag_q) or np.any(np.isnan(x_fcst)) or len(train_df) < LASSO_CV_SPLITS * 4
 
             X_train = train_df[feat_names].values
@@ -272,24 +288,26 @@ def run_regularized() -> pd.DataFrame:
         for model_name, records in [("lasso", lasso_records), ("elasticnet", enet_records)]:
             df = pd.DataFrame(records).set_index("period")
             df.index = pd.PeriodIndex(df.index, freq="Q")
-            _save(df, f"{model_name}_v{v}")
+            _save(df, f"{model_name}_v{v}{suffix}")
 
             for sample in ("full", "pre_covid", "ex_covid"):
                 m = compute_metrics(df, sample=sample)
-                m["model"] = model_name
+                m["model"] = f"{model_name}{suffix}"
                 m["vintage"] = v
                 metrics_rows.append(m)
 
-    # Save Lasso variable-selection log
-    sel_df = pd.DataFrame(selection_rows)
-    FORECASTS_DIR.mkdir(parents=True, exist_ok=True)
-    sel_df.to_csv(FORECASTS_DIR / "lasso_selection.csv", index=False)
+    # Save Lasso variable-selection log (base run only)
+    if not with_covid_dummies:
+        sel_df = pd.DataFrame(selection_rows)
+        FORECASTS_DIR.mkdir(parents=True, exist_ok=True)
+        sel_df.to_csv(FORECASTS_DIR / "lasso_selection.csv", index=False)
 
     metrics = pd.DataFrame(metrics_rows)[
         ["model", "vintage", "sample", "n_quarters", "rmse", "mae", "bias"]
     ]
     TABLES_DIR.mkdir(parents=True, exist_ok=True)
-    metrics.to_csv(TABLES_DIR / "regularized_metrics.csv", index=False)
+    fname = "regularized_metrics_covid.csv" if with_covid_dummies else "regularized_metrics.csv"
+    metrics.to_csv(TABLES_DIR / fname, index=False)
     return metrics
 
 
