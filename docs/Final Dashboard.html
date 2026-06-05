@@ -41,17 +41,18 @@
     nav{position:sticky;top:0;z-index:100;background:var(--card);border-bottom:1px solid var(--border);
         box-shadow:var(--sh);padding:0 2rem;
         display:grid;grid-template-columns:1fr auto 1fr;
-        align-items:center;height:56px;transition:background .3s}
-    .nav-brand{font-weight:700;font-size:.95rem;color:var(--accent);justify-self:start}
-    .nav-links{display:flex;gap:.2rem;list-style:none;overflow-x:auto;scrollbar-width:none;
-               justify-content:center}
+        align-items:stretch;height:56px;transition:background .3s}
+    .nav-brand{font-weight:700;font-size:.95rem;color:var(--accent);justify-self:start;
+               display:flex;align-items:center}
+    .nav-links{display:flex;align-items:center;gap:.2rem;list-style:none;
+               overflow-x:auto;scrollbar-width:none;justify-content:center}
     .nav-links::-webkit-scrollbar{display:none}
     .nav-links a{color:var(--text2);font-size:.78rem;font-weight:500;padding:.3rem .6rem;
                  border-radius:6px;transition:var(--tr);white-space:nowrap}
     .nav-links a:hover,.nav-links a.active{background:var(--accent-l);color:var(--accent)}
     #tbtn{background:var(--bg2);border:1px solid var(--border);border-radius:8px;cursor:pointer;
           padding:.35rem .7rem;font-size:.82rem;color:var(--text);transition:var(--tr);
-          justify-self:end}
+          justify-self:end;align-self:center}
     #tbtn:hover{background:var(--accent-l);color:var(--accent)}
 
     /* HERO */
