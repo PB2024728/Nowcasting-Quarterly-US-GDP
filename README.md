@@ -2,7 +2,7 @@
 
 Investigates whether monthly macroeconomic indicators can nowcast quarterly U.S. real GDP growth more accurately than a pure time-series benchmark. Four method families are compared — bridge equations, MIDAS regression, regularized regression (Lasso / ElasticNet), and a dynamic factor model — against AR(p) and random-walk baselines over a 2005Q1–2026Q1 out-of-sample window.
 
-See [`report.md`](report.md) for the full write-up including results and limitations.
+See [`docs/report.md`](docs/report.md) for the full write-up including results and limitations.
 
 ---
 
@@ -145,7 +145,10 @@ Open `notebooks/99_final_figures.ipynb` in Jupyter to view and regenerate all fi
 │   └── 99_final_figures.ipynb
 ├── tests/
 │   └── test_ragged_edge.py    # Unit tests for the masker (5 tests)
-├── report.md          # Full research report
+├── docs/
+│   ├── report.md          # Full research report
+│   ├── Final Dashboard.html  # Interactive HTML explainer with charts
+│   └── EXPLAINER.pdf      # PDF export of plain-language explainer
 ├── requirements.txt
 └── .env.example       # Template — copy to .env and add FRED_API_KEY
 ```
