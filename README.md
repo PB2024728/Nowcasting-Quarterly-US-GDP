@@ -2,7 +2,7 @@
 
 Investigates whether monthly macroeconomic indicators can nowcast quarterly U.S. real GDP growth more accurately than a pure time-series benchmark. Four method families are compared — bridge equations, MIDAS regression, regularized regression (Lasso / ElasticNet), and a dynamic factor model — against AR(p) and random-walk baselines over a 2005Q1–2026Q1 out-of-sample window.
 
-See [`docs/report.md`](docs/report.md) for the full write-up including results and limitations.
+See [`Dashboard/report.md`](Dashboard/report.md) for the full write-up including results and limitations.
 
 ---
 
